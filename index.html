@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>关键词处理</title>
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+		integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+	<link rel="stylesheet" href="./static/css/common.css">
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-8">
+				<div class="content">
+					<div class="content-head">数据去重</div>
+					<div class="content-body">
+						<button type="button" class="btn btn-info" id="submitRide">提交</button>
+					</div>
+				</div>
+
+				<div class="content">
+					<div class="content-head">数据过滤</div>
+					<div class="content-body">
+						<div class="form-group">
+							<label for="correctWord">正确词（多个词用逗号隔开，eg.aa,bb,cc）</label>
+							<input type="text" id="correctWord" class="form-control" placeholder="请输入...">
+						</div>
+						<div class="form-group">
+							<label for="errWord">错误词（多个词用逗号隔开，eg.aa,bb,cc）</label>
+							<input type="text" id="errWord" class="form-control" placeholder="请输入...">
+						</div>
+						<button type="button" class="btn btn-info" id="submitFilter">提交</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-4">
+				<!-- toast -->
+				<div class="content toast-box" id="toast">
+					<div class="content-head">广播通知</div>
+					<div class="content-body" id="toastBody">
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+</body>
+
+<script type="text/javascript" src="./static/js/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+	integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+	crossorigin="anonymous"></script>
+<script>
+	(function ($, window) {
+		window.showToast = function (text, type) {
+			$('#toastBody').append('<span class="' + type + '">' + text + '</span>')
+		}
+		window.$http = function (url, params = {}, type = 'post') {
+			return new Promise((resolve, reject) => {
+				let baseUrl = 'http://localhost:4000'
+				$.ajax({
+					url: baseUrl + url,
+					type: type,
+					data: params,
+					dataType: 'json',
+					timeout: 30000,
+					success: function (res) {
+						console.log(url + ' succ::', res);
+						resolve(res)
+					},
+					error: function (err) {
+						console.log(url + ' err::', err);
+						reject(err)
+					}
+				})
+			})
+		}
+
+		// let params = { username: 'admin', password: '123' }
+		// $http('/login', params)
+
+		// 数据去重
+		$('#submitRide').on('click', () => {
+			// $http('/api/rideData').then((res)=>{}).catch((err)=>{})
+			$http('/api/rideData').then((res) => {
+				showToast('去重成功！', 'succ')
+			}).catch((err) => {
+				showToast('去重失败！', 'fail')
+			})
+		})
+		// 数据过滤
+		$('#submitFilter').on('click', () => {
+			let correctWord = $('#correctWord').val().trim()
+			let errWord = $('#errWord').val().trim()
+			let params = {
+				correctWords: correctWord || '',
+				errWords: errWord || ''
+			}
+			$http('/api/filterData', params).then((res) => {
+				showToast('过滤成功！', 'succ')
+			}).catch((err) => {
+				showToast('过滤失败！', 'fail')
+			})
+		})
+	})(jQuery, window)
+</script>
+
+</html>
