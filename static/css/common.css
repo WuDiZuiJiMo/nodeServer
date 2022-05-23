@@ -1,0 +1,38 @@
+body {
+    padding-top: 10px;
+}
+
+.content {
+    border: 1px solid grey;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.content .content-head {
+    border-bottom: 1px solid grey;
+    padding: 10px;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.content .content-body {
+    padding: 10px;
+}
+
+.toast-box .content-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.toast-box .content-body span {
+    margin-bottom: 4px;
+    padding: 0 10px;
+}
+
+.toast-box .content-body .succ {
+    background-color: #5CB85C;
+}
+
+.toast-box .content-body .fail {
+    background-color: #D9534F;
+}
